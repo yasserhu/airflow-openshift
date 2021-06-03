@@ -1010,11 +1010,11 @@ parameters:
 - description: Number of Celery workers
   displayName: Number of Workers
   name: WORKER_COUNT
-  value: "2"
+  value: 2
 - description: Celery worker CPU (check with your project limits)
   displayName: Worker CPU
   name: WORKER_CPU
-  value: "2"
+  value: 2
 - description: Celery worker memory size (check with your project limits)
   displayName: Worker Memory
   name: WORKER_MEMORY
