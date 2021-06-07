@@ -319,7 +319,7 @@ objects:
     name: webserver
   spec:
     replicas: 1
-    revisionHistoryLimit: 2
+    revisionHistoryLimit: 10
     selector:
       app: ${APPLICATION_NAME}
       deploymentconfig: webserver
@@ -512,8 +512,8 @@ objects:
       app: ${APPLICATION_NAME}
     name: worker
   spec:
-    replicas: ${WORKER_COUNT}
-    revisionHistoryLimit: 2
+    replicas: 2 #${WORKER_COUNT}
+    revisionHistoryLimit: 10
     selector:
       app: ${APPLICATION_NAME}
       deploymentconfig: worker
