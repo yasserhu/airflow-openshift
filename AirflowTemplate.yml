@@ -196,7 +196,7 @@ objects:
             timeoutSeconds: 1
           resources:
             limits:
-              memory: 1Gi
+              memory: 4Gi
           securityContext:
             capabilities: {}
             privileged: false
@@ -282,7 +282,7 @@ objects:
             timeoutSeconds: 1
           resources:
             limits:
-              memory: 1Gi
+              memory: 4Gi
           securityContext:
             capabilities: {}
             privileged: false
@@ -399,10 +399,10 @@ objects:
           resources:
             limits:
               cpu: 1
-              memory: 2Gi
+              memory: 4Gi
             requests:
               cpu: 1
-              memory: 2Gi
+              memory: 4Gi
           volumeMounts:
           - mountPath: "/usr/local/airflow/dags"
             name: airpod-dag-vol
@@ -464,10 +464,10 @@ objects:
           resources:
             limits:
               cpu: 1
-              memory: 2Gi
+              memory: 4Gi
             requests:
               cpu: 1
-              memory: 2Gi
+              memory: 4Gi
           volumeMounts:
           - mountPath: "/usr/local/airflow/dags"
             name: airpod-dag-vol
@@ -988,7 +988,7 @@ objects:
       - ReadWriteMany
     resources:
       requests:
-        storage: 1Mi
+        storage: 4Mi
         
 parameters:
 - description: Name of the Airflow application
@@ -1018,7 +1018,7 @@ parameters:
 - description: Celery worker memory size (check with your project limits)
   displayName: Worker Memory
   name: WORKER_MEMORY
-  value: "2Gi"
+  value: "4Gi"
 - description: Python PIP requirements needed for the DAGs, separated by whitespace
   displayName: Python PIP Requirements
   name: PIP_REQUIREMENTS
@@ -1082,7 +1082,7 @@ parameters:
 - description: Size of the pvc volume storing DAGs
   displayName: DAG Volume Storage Size
   name: PERSISTENT_VOLUME_CLAIM_DAG_SIZE
-  value: "1Gi"
+  value: "4Gi"
 - description: Attached PERSISTENT volume claim name for storing the logs
   displayName: PERSISTENT Volume Claim Name (Logs)
   name: PERSISTENT_VOLUME_CLAIM_LOG
@@ -1098,7 +1098,7 @@ parameters:
 - description: Size of the metadata volume storage
   displayName: Metadata Volume Storage Size
   name: PERSISTENT_VOLUME_CLAIM_DB_SIZE
-  value: "1Gi"
+  value: "4Gi"
 - description: Attached PERSISTENT volume claim name for storing temporary data across Celery workers
   displayName: PERSISTENT Volume Claim Name (Temp Storage for Workers)
   name: PERSISTENT_VOLUME_CLAIM_TMP_WORKER
@@ -1106,4 +1106,4 @@ parameters:
 - description: Size of the temporary data storage in Celery workers
   displayName: Metadata Volume Storage Size
   name: PERSISTENT_VOLUME_CLAIM_TMP_WORKER_SIZE
-  value: "2Gi"
+  value: "4Gi"
