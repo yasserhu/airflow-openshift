@@ -398,10 +398,10 @@ objects:
             protocol: TCP
           resources:
             limits:
-              cpu: '1'
+              cpu: 1
               memory: 2Gi
             requests:
-              cpu: '1'
+              cpu: 1
               memory: 2Gi
           volumeMounts:
           - mountPath: "/usr/local/airflow/dags"
@@ -463,10 +463,10 @@ objects:
             protocol: TCP
           resources:
             limits:
-              cpu: '1'
+              cpu: 1
               memory: 2Gi
             requests:
-              cpu: '1'
+              cpu: 1
               memory: 2Gi
           volumeMounts:
           - mountPath: "/usr/local/airflow/dags"
@@ -935,7 +935,7 @@ objects:
       weight: 100
     wildcardPolicy: None
       
-- apiVersion: v1
+- apiVersion: "v1"
   kind: PersistentVolumeClaim
   metadata:
     name: ${PERSISTENT_VOLUME_CLAIM_DAG}
@@ -946,7 +946,7 @@ objects:
       requests:
         storage: ${PERSISTENT_VOLUME_CLAIM_DAG_SIZE}
         
-- apiVersion: v1
+- apiVersion: "v1"
   kind: PersistentVolumeClaim
   metadata:
     name: ${PERSISTENT_VOLUME_CLAIM_LOG}
@@ -957,7 +957,7 @@ objects:
       requests:
         storage: ${PERSISTENT_VOLUME_CLAIM_LOG_SIZE}
         
-- apiVersion: v1
+- apiVersion: "v1"
   kind: PersistentVolumeClaim
   metadata:
     name: ${PERSISTENT_VOLUME_CLAIM_DB}
@@ -968,7 +968,7 @@ objects:
       requests:
         storage: ${PERSISTENT_VOLUME_CLAIM_DB_SIZE}
         
-- apiVersion: v1
+- apiVersion: "v1"
   kind: PersistentVolumeClaim
   metadata:
     name: ${PERSISTENT_VOLUME_CLAIM_TMP_WORKER}
@@ -979,7 +979,7 @@ objects:
       requests:
         storage: ${PERSISTENT_VOLUME_CLAIM_TMP_WORKER_SIZE}
 
-- apiVersion: v1
+- apiVersion: "v1"
   kind: PersistentVolumeClaim
   metadata:
     name: fernet-key-pvc
@@ -1010,15 +1010,15 @@ parameters:
 - description: Number of Celery workers
   displayName: Number of Workers
   name: WORKER_COUNT
-  value: 2
+  value: "2"
 - description: Celery worker CPU (check with your project limits)
   displayName: Worker CPU
   name: WORKER_CPU
-  value: 2
+  value: "2"
 - description: Celery worker memory size (check with your project limits)
   displayName: Worker Memory
   name: WORKER_MEMORY
-  value: 2Gi
+  value: "2Gi"
 - description: Python PIP requirements needed for the DAGs, separated by whitespace
   displayName: Python PIP Requirements
   name: PIP_REQUIREMENTS
@@ -1062,7 +1062,7 @@ parameters:
 - description: Redis Port (to avoid issues with default naming in OpenShift)
   displayName: Redis Port
   name: REDIS_PORT
-  value: 6379
+  value: "6379"
   required: true
 - description: Password for Redis database
   displayName: Redis Connection Password
@@ -1082,7 +1082,7 @@ parameters:
 - description: Size of the pvc volume storing DAGs
   displayName: DAG Volume Storage Size
   name: PERSISTENT_VOLUME_CLAIM_DAG_SIZE
-  value: 1Gi
+  value: "1Gi"
 - description: Attached PERSISTENT volume claim name for storing the logs
   displayName: PERSISTENT Volume Claim Name (Logs)
   name: PERSISTENT_VOLUME_CLAIM_LOG
@@ -1090,7 +1090,7 @@ parameters:
 - description: Size of the pvc volume storing logs
   displayName: Logs Volume Storage Size
   name: PERSISTENT_VOLUME_CLAIM_LOG_SIZE
-  value: 10Gi
+  value: "10Gi"
 - description: Attached PERSISTENT volume claim name for storing metadata in PostgreSQL database
   displayName: PERSISTENT Volume Claim Name (DB)
   name: PERSISTENT_VOLUME_CLAIM_DB
@@ -1098,7 +1098,7 @@ parameters:
 - description: Size of the metadata volume storage
   displayName: Metadata Volume Storage Size
   name: PERSISTENT_VOLUME_CLAIM_DB_SIZE
-  value: 1Gi
+  value: "1Gi"
 - description: Attached PERSISTENT volume claim name for storing temporary data across Celery workers
   displayName: PERSISTENT Volume Claim Name (Temp Storage for Workers)
   name: PERSISTENT_VOLUME_CLAIM_TMP_WORKER
@@ -1106,4 +1106,4 @@ parameters:
 - description: Size of the temporary data storage in Celery workers
   displayName: Metadata Volume Storage Size
   name: PERSISTENT_VOLUME_CLAIM_TMP_WORKER_SIZE
-  value: 2Gi
+  value: "2Gi"
