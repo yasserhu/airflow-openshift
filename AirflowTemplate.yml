@@ -1,4 +1,4 @@
-apiVersion: v1
+apiVersion: template.openshift.io/v1
 kind: Template
 labels:
   template: airflow
@@ -39,7 +39,7 @@ metadata:
   
 objects:
 
-- apiVersion: v1
+- apiVersion: apps.openshift.io/v1
   kind: DeploymentConfig
   metadata:
     labels:
@@ -225,7 +225,7 @@ objects:
     - type: ConfigChange
     
     
-- apiVersion: v1
+- apiVersion: template.openshift.io/v1
   kind: DeploymentConfig
   metadata:
     labels:
@@ -311,7 +311,7 @@ objects:
     - type: ConfigChange
     
     
-- apiVersion: v1
+- apiVersion: apps.openshift.io/v1
   kind: DeploymentConfig
   metadata:
     labels:
@@ -505,7 +505,7 @@ objects:
     - type: ConfigChange
     
     
-- apiVersion: v1
+- apiVersion: apps.openshift.io/v1
   kind: DeploymentConfig
   metadata:
     labels:
@@ -629,7 +629,7 @@ objects:
     - type: ConfigChange
     
  
-- apiVersion: v1
+- apiVersion: apps.openshift.io/v1
   kind: DeploymentConfig
   metadata:
     labels:
@@ -899,7 +899,7 @@ objects:
       weight: 100
     wildcardPolicy: None
   
-- apiVersion: v1
+- apiVersion: route.openshift.io/v1
   kind: Route
   metadata:
     labels:
@@ -917,7 +917,7 @@ objects:
       weight: 100
     wildcardPolicy: None
       
-- apiVersion: v1
+- apiVersion: route.openshift.io/v1
   kind: Route
   metadata:
     labels:
@@ -935,7 +935,7 @@ objects:
       weight: 100
     wildcardPolicy: None
       
-- apiVersion: "v1"
+- apiVersion: v1
   kind: "PersistentVolumeClaim"
   metadata:
     name: ${PERSISTENT_VOLUME_CLAIM_DAG}
@@ -946,7 +946,7 @@ objects:
       requests:
         storage: ${PERSISTENT_VOLUME_CLAIM_DAG_SIZE}
         
-- apiVersion: "v1"
+- apiVersion: v1
   kind: "PersistentVolumeClaim"
   metadata:
     name: ${PERSISTENT_VOLUME_CLAIM_LOG}
@@ -957,7 +957,7 @@ objects:
       requests:
         storage: ${PERSISTENT_VOLUME_CLAIM_LOG_SIZE}
         
-- apiVersion: "v1"
+- apiVersion: v1
   kind: "PersistentVolumeClaim"
   metadata:
     name: ${PERSISTENT_VOLUME_CLAIM_DB}
@@ -968,7 +968,7 @@ objects:
       requests:
         storage: ${PERSISTENT_VOLUME_CLAIM_DB_SIZE}
         
-- apiVersion: "v1"
+- apiVersion: v1
   kind: "PersistentVolumeClaim"
   metadata:
     name: ${PERSISTENT_VOLUME_CLAIM_TMP_WORKER}
@@ -979,7 +979,7 @@ objects:
       requests:
         storage: ${PERSISTENT_VOLUME_CLAIM_TMP_WORKER_SIZE}
 
-- apiVersion: "v1"
+- apiVersion: v1
   kind: "PersistentVolumeClaim"
   metadata:
     name: "fernet-key-pvc"
