@@ -397,9 +397,9 @@ objects:
           - containerPort: 8793
             protocol: TCP
           resources:
-            limits:
-              cpu: 250
-              memory: 1Gi
+           # limits:
+            #  cpu: 250
+             # memory: 1Gi
             requests:
               cpu: 1
               memory: 1Gi
@@ -462,9 +462,9 @@ objects:
           - containerPort: 8793
             protocol: TCP
           resources:
-            limits:
-              cpu: 250
-              memory: 1Gi
+            #limits:
+             # cpu: 250
+              #memory: 1Gi
             requests:
               cpu: 1
               memory: 1Gi
