@@ -62,7 +62,7 @@ objects:
         containers:
         - env:
           - name: FLOWER_PORT
-            value: '5555'
+            value: 5555
           - name: FLOWER_HOST
             value: flower
           - name: EXECUTOR
