@@ -33,12 +33,12 @@ objects:
 
 - apiVersion: apps.openshift.io/v1
   kind: DeploymentConfig
-  namepspace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+  namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   metadata:
     labels:
       app: ${APPLICATION_NAME}
     name: flower
-    namepspace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+    namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   spec:
     replicas: 1
     selector:
@@ -128,13 +128,13 @@ objects:
     
 - apiVersion: apps.openshift.io/v1
   kind: DeploymentConfig
-  namepspace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+  namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   metadata:
     labels:
       app: ${APPLICATION_NAME}
       template: postgresql-ephemeral-template
     name: postgresql
-    namepspace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+    namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   spec:
     replicas: 1
     selector:
@@ -223,13 +223,13 @@ objects:
     
 - apiVersion: apps.openshift.io/v1
   kind: DeploymentConfig
-  namepspace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+  namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   metadata:
     labels:
       app: ${APPLICATION_NAME}
       template: redis-ephemeral-template
     name: redis
-    namepspace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+    namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   spec:
     replicas: 1
     selector:
@@ -311,12 +311,12 @@ objects:
     
 - apiVersion: apps.openshift.io/v1
   kind: DeploymentConfig
-  namepspace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+  namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   metadata:
     labels:
       app: ${APPLICATION_NAME}
     name: webserver
-    namepspace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+    namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   spec:
     replicas: 1
     revisionHistoryLimit: 10
@@ -507,12 +507,12 @@ objects:
     
 - apiVersion: apps.openshift.io/v1
   kind: DeploymentConfig
-  namepspace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+  namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   metadata:
     labels:
       app: ${APPLICATION_NAME}
     name: worker
-    namepspace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+    namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   spec:
     replicas: 2 #${WORKER_COUNT}
     revisionHistoryLimit: 10
@@ -633,12 +633,12 @@ objects:
  
 - apiVersion: apps.openshift.io/v1
   kind: DeploymentConfig
-  namepspace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+  namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   metadata:
     labels:
       app: ${APPLICATION_NAME}
     name: jupyter
-    namepspace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+    namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   spec:
     replicas: 1
     selector:
@@ -678,10 +678,10 @@ objects:
   data:
     requirements.txt: boto3
   kind: ConfigMap
-  namepspace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+  namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   metadata:
     name: requirements
-    namepspace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+    namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
  
 - apiVersion: v1
   stringData:
@@ -689,10 +689,10 @@ objects:
     flower_username: ${FLOWER_USER}
     flower_password: ${FLOWER_PASSWORD}
   kind: Secret
-  namepspace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+  namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   metadata:
     name: flower-auth
-    namepspace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+    namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   type: Opaque
   
 - apiVersion: v1
@@ -701,36 +701,36 @@ objects:
     database-password: ${POSTGRESQL_PASSWORD}
     database-user: ${POSTGRESQL_USER}
   kind: Secret
-  namepspace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+  namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   metadata:
     labels:
       app: ${APPLICATION_NAME}
       template: postgresql-ephemeral-template
     name: postgresql
-    namepspace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+    namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   type: Opaque
   
 - apiVersion: v1
   stringData:
     database-password: ${REDIS_PASSWORD}
   kind: Secret
-  namepspace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+  namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   metadata:
     labels:
       app: ${APPLICATION_NAME}
       template: redis-ephemeral-template
     name: redis
-    namepspace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+    namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   type: Opaque
   
 - apiVersion: v1
   kind: Service
-  namepspace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+  namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   metadata:
     labels:
       app: ${APPLICATION_NAME}
     name: flower
-    namepspace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+    namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   spec:
     ports:
     - name: 5555-tcp
@@ -755,13 +755,13 @@ objects:
     
 - apiVersion: v1
   kind: Service
-  namepspace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+  namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   metadata:
     labels:
       app: ${APPLICATION_NAME}
       template: postgresql-ephemeral-template
     name: postgresql
-    namepspace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+    namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   spec:
     ports:
     - name: postgresql
@@ -777,13 +777,13 @@ objects:
     
 - apiVersion: v1
   kind: Service
-  namepspace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+  namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   metadata:
     labels:
       app: ${APPLICATION_NAME}
       template: redis-ephemeral-template
     name: redis
-    namepspace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+    namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   spec:
     ports:
     - name: redis
@@ -799,12 +799,12 @@ objects:
     
 - apiVersion: v1
   kind: Service
-  namepspace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+  namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   metadata:
     labels:
       app: ${APPLICATION_NAME}
     name: scheduler
-    namepspace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+    namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   spec:
     ports:
     - name: 5555-tcp
@@ -829,12 +829,12 @@ objects:
     
 - apiVersion: v1
   kind: Service
-  namepspace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+  namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   metadata:
     labels:
       app: ${APPLICATION_NAME}
     name: webserver
-    namepspace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+    namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   spec:
     ports:
     - name: 5555-tcp
@@ -859,12 +859,12 @@ objects:
     
 - apiVersion: v1
   kind: Service
-  namepspace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+  namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   metadata:
     labels:
       app: ${APPLICATION_NAME}
     name: worker
-    namepspace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+    namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   spec:
     ports:
     - name: 5555-tcp
@@ -889,12 +889,12 @@ objects:
 
 - apiVersion: v1
   kind: Service
-  namepspace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+  namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   metadata:
     labels:
       app: ${APPLICATION_NAME}
     name: jupyter
-    namepspace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+    namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   spec:
     ports:
     - name: 8080-tcp
@@ -909,12 +909,12 @@ objects:
     
 - apiVersion: route.openshift.io/v1
   kind: Route
-  namepspace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+  namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   metadata:
     labels:
       app: ${APPLICATION_NAME}
     name: ${APPLICATION_NAME}-flower
-    namepspace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+    namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   spec:
     port:
       targetPort: 5555-tcp
@@ -929,12 +929,12 @@ objects:
   
 - apiVersion: route.openshift.io/v1
   kind: Route
-  namepspace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+  namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   metadata:
     labels:
       app: ${APPLICATION_NAME}
     name: ${APPLICATION_NAME}
-    namepspace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+    namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   spec:
     port:
       targetPort: 8080-tcp
@@ -949,12 +949,12 @@ objects:
       
 - apiVersion: route.openshift.io/v1
   kind: Route
-  namepspace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+  namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   metadata:
     labels:
       app: ${APPLICATION_NAME}
     name: ${APPLICATION_NAME}-jupyter
-    namepspace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+    namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   spec:
     port:
       targetPort: 8080-tcp
@@ -971,7 +971,7 @@ objects:
   kind: PersistentVolumeClaim
   metadata:
     name: ${PERSISTENT_VOLUME_CLAIM_DAG}
-    namepspace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+    namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   spec:
     accessModes:
       - ReadWriteOnce
@@ -983,7 +983,7 @@ objects:
   kind: PersistentVolumeClaim
   metadata:
     name: ${PERSISTENT_VOLUME_CLAIM_LOG}
-    namepspace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+    namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   spec:
     accessModes:
       - ReadWriteOnce
@@ -995,7 +995,7 @@ objects:
   kind: PersistentVolumeClaim
   metadata:
     name: ${PERSISTENT_VOLUME_CLAIM_DB}
-    namepspace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+    namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   spec:
     accessModes:
       - ReadWriteOnce
@@ -1007,7 +1007,7 @@ objects:
   kind: PersistentVolumeClaim
   metadata:
     name: ${PERSISTENT_VOLUME_CLAIM_TMP_WORKER}
-    namepspace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+    namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   spec:
     accessModes:
       - ReadWriteOnce
@@ -1019,7 +1019,7 @@ objects:
   kind: PersistentVolumeClaim
   metadata:
     name: fernet-key-pvc
-    namepspace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+    namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   spec:
     accessModes:
       - ReadWriteMany
