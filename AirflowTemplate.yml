@@ -1,4 +1,4 @@
-apiVersion: template.openshift.io/v1
+apiVersion: v1
 kind: Template
 labels:
   template: airflow
@@ -7,12 +7,20 @@ message: |-
   To upload/write the DAGs, you should open the Route for the 'jupyter' deployment.
 metadata:
   annotations:
-    description: |
-      Deploys Apache Airflow on Openshift. 
+    description: Deploys Apache Airflow on Openshift. 
+
+    
       Required variables - 'Application Name', 'Airflow Web UI Username', 'Airflow Web UI Password' and 'Jupyter Password'. Rest of the variables are optional and are filled/generated with default/auto values, if you do not explicitly provide a value.
+
+
       Dependencies - Before deployment you can list all required Python pip packages in the 'Python PIP Requirements' parameter, separated by whitespace. After deployment you can fill your Python pip requirements.txt contents in the 'requirements' config-map.
+
+
       By default, the setup deploys the Airflow webserver backed by 2 Celery workers.
       The configuration for the worker pods can be changed according to the Openshift Quota(Limit Range). To get more quota, you should contact Openshift admins.
+
+
+      WARNING - This deployment setup is still in the experimental stage.
     iconClass: icon-datavirt
     openshift.io/display-name: Apache Airflow
     openshift.io/documentation-url: https://github.com/CSCfi/airflow-openshift
@@ -31,14 +39,12 @@ metadata:
   
 objects:
 
-- apiVersion: apps.openshift.io/v1
+- apiVersion: v1
   kind: DeploymentConfig
-  #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   metadata:
     labels:
       app: ${APPLICATION_NAME}
     name: flower
-    #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   spec:
     replicas: 1
     selector:
@@ -110,13 +116,7 @@ objects:
             protocol: TCP
           - containerPort: 5555
             protocol: TCP
-          resources: # try to resolve limits issue
-            limits:
-              cpu: 2500m
-              memory: 2Gi
-            requests:
-              cpu: 1000m
-              memory: 512Mi
+          resources: {}
           volumeMounts:
           - mountPath: /tmp/fernet_key
             name: fernet-key-vol
@@ -132,15 +132,13 @@ objects:
     triggers:
     - type: ConfigChange
     
-- apiVersion: apps.openshift.io/v1
+- apiVersion: v1
   kind: DeploymentConfig
-  #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   metadata:
     labels:
       app: ${APPLICATION_NAME}
       template: postgresql-ephemeral-template
     name: postgresql
-    #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   spec:
     replicas: 1
     selector:
@@ -196,7 +194,9 @@ objects:
             periodSeconds: 10
             successThreshold: 1
             timeoutSeconds: 1
-          resources: {}
+          resources:
+            limits:
+              memory: 1Gi
           securityContext:
             capabilities: {}
             privileged: false
@@ -225,15 +225,13 @@ objects:
     - type: ConfigChange
     
     
-- apiVersion: apps.openshift.io/v1
+- apiVersion: v1
   kind: DeploymentConfig
-  #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   metadata:
     labels:
       app: ${APPLICATION_NAME}
       template: redis-ephemeral-template
     name: redis
-    #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   spec:
     replicas: 1
     selector:
@@ -282,7 +280,9 @@ objects:
             periodSeconds: 10
             successThreshold: 1
             timeoutSeconds: 1
-          resources: {}
+          resources:
+            limits:
+              memory: 1Gi
           securityContext:
             capabilities: {}
             privileged: false
@@ -311,14 +311,12 @@ objects:
     - type: ConfigChange
     
     
-- apiVersion: apps.openshift.io/v1
+- apiVersion: v1
   kind: DeploymentConfig
-  #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   metadata:
     labels:
       app: ${APPLICATION_NAME}
     name: webserver
-    #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   spec:
     replicas: 1
     revisionHistoryLimit: 10
@@ -399,9 +397,12 @@ objects:
           - containerPort: 8793
             protocol: TCP
           resources:
-             requests:
-              cpu: 1
-              memory: 1Gi
+            limits:
+              cpu: '1'
+              memory: 2Gi
+            requests:
+              cpu: '1'
+              memory: 2Gi
           volumeMounts:
           - mountPath: "/usr/local/airflow/dags"
             name: airpod-dag-vol
@@ -461,9 +462,12 @@ objects:
           - containerPort: 8793
             protocol: TCP
           resources:
-              requests:
-              cpu: 1
-              memory: 1Gi
+            limits:
+              cpu: '1'
+              memory: 2Gi
+            requests:
+              cpu: '1'
+              memory: 2Gi
           volumeMounts:
           - mountPath: "/usr/local/airflow/dags"
             name: airpod-dag-vol
@@ -501,16 +505,14 @@ objects:
     - type: ConfigChange
     
     
-- apiVersion: apps.openshift.io/v1
+- apiVersion: v1
   kind: DeploymentConfig
-  #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   metadata:
     labels:
       app: ${APPLICATION_NAME}
     name: worker
-    #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   spec:
-    replicas: 2 #${WORKER_COUNT}
+    replicas: 2 # ${WORKER_COUNT}
     revisionHistoryLimit: 10
     selector:
       app: ${APPLICATION_NAME}
@@ -627,14 +629,12 @@ objects:
     - type: ConfigChange
     
  
-- apiVersion: apps.openshift.io/v1
+- apiVersion: v1
   kind: DeploymentConfig
-  #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   metadata:
     labels:
       app: ${APPLICATION_NAME}
     name: jupyter
-    #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   spec:
     replicas: 1
     selector:
@@ -674,10 +674,8 @@ objects:
   data:
     requirements.txt: boto3
   kind: ConfigMap
-  #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   metadata:
     name: requirements
-    #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
  
 - apiVersion: v1
   stringData:
@@ -685,10 +683,8 @@ objects:
     flower_username: ${FLOWER_USER}
     flower_password: ${FLOWER_PASSWORD}
   kind: Secret
-  #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   metadata:
     name: flower-auth
-    #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   type: Opaque
   
 - apiVersion: v1
@@ -697,36 +693,30 @@ objects:
     database-password: ${POSTGRESQL_PASSWORD}
     database-user: ${POSTGRESQL_USER}
   kind: Secret
-  #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   metadata:
     labels:
       app: ${APPLICATION_NAME}
       template: postgresql-ephemeral-template
     name: postgresql
-    #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   type: Opaque
   
 - apiVersion: v1
   stringData:
     database-password: ${REDIS_PASSWORD}
   kind: Secret
-  #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   metadata:
     labels:
       app: ${APPLICATION_NAME}
       template: redis-ephemeral-template
     name: redis
-    #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   type: Opaque
   
 - apiVersion: v1
   kind: Service
-  #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   metadata:
     labels:
       app: ${APPLICATION_NAME}
     name: flower
-    #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   spec:
     ports:
     - name: 5555-tcp
@@ -751,13 +741,11 @@ objects:
     
 - apiVersion: v1
   kind: Service
-  #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   metadata:
     labels:
       app: ${APPLICATION_NAME}
       template: postgresql-ephemeral-template
     name: postgresql
-    #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   spec:
     ports:
     - name: postgresql
@@ -773,13 +761,11 @@ objects:
     
 - apiVersion: v1
   kind: Service
-  #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   metadata:
     labels:
       app: ${APPLICATION_NAME}
       template: redis-ephemeral-template
     name: redis
-    #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   spec:
     ports:
     - name: redis
@@ -795,12 +781,10 @@ objects:
     
 - apiVersion: v1
   kind: Service
-  #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   metadata:
     labels:
       app: ${APPLICATION_NAME}
     name: scheduler
-    #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   spec:
     ports:
     - name: 5555-tcp
@@ -825,12 +809,10 @@ objects:
     
 - apiVersion: v1
   kind: Service
-  #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   metadata:
     labels:
       app: ${APPLICATION_NAME}
     name: webserver
-    #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   spec:
     ports:
     - name: 5555-tcp
@@ -855,12 +837,10 @@ objects:
     
 - apiVersion: v1
   kind: Service
-  #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   metadata:
     labels:
       app: ${APPLICATION_NAME}
     name: worker
-    #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   spec:
     ports:
     - name: 5555-tcp
@@ -885,12 +865,10 @@ objects:
 
 - apiVersion: v1
   kind: Service
-  #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   metadata:
     labels:
       app: ${APPLICATION_NAME}
     name: jupyter
-    #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   spec:
     ports:
     - name: 8080-tcp
@@ -905,12 +883,10 @@ objects:
     
 - apiVersion: v1
   kind: Route
-  #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   metadata:
     labels:
       app: ${APPLICATION_NAME}
     name: ${APPLICATION_NAME}-flower
-    #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   spec:
     port:
       targetPort: 5555-tcp
@@ -923,14 +899,12 @@ objects:
       weight: 100
     wildcardPolicy: None
   
-- apiVersion: route.openshift.io/v1
+- apiVersion: v1
   kind: Route
-  #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   metadata:
     labels:
       app: ${APPLICATION_NAME}
     name: ${APPLICATION_NAME}
-    #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   spec:
     port:
       targetPort: 8080-tcp
@@ -943,14 +917,12 @@ objects:
       weight: 100
     wildcardPolicy: None
       
-- apiVersion: route.openshift.io/v1
+- apiVersion: v1
   kind: Route
-  #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   metadata:
     labels:
       app: ${APPLICATION_NAME}
     name: ${APPLICATION_NAME}-jupyter
-    #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   spec:
     port:
       targetPort: 8080-tcp
@@ -964,61 +936,56 @@ objects:
     wildcardPolicy: None
       
 - apiVersion: "v1"
-  kind: PersistentVolumeClaim
+  kind: "PersistentVolumeClaim"
   metadata:
     name: ${PERSISTENT_VOLUME_CLAIM_DAG}
-    #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   spec:
     accessModes:
-      - ReadWriteOnce
+      - "ReadWriteOnce"
     resources:
       requests:
         storage: ${PERSISTENT_VOLUME_CLAIM_DAG_SIZE}
         
 - apiVersion: "v1"
-  kind: PersistentVolumeClaim
+  kind: "PersistentVolumeClaim"
   metadata:
     name: ${PERSISTENT_VOLUME_CLAIM_LOG}
-    #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   spec:
     accessModes:
-      - ReadWriteOnce
+      - "ReadWriteOnce"
     resources:
       requests:
         storage: ${PERSISTENT_VOLUME_CLAIM_LOG_SIZE}
         
 - apiVersion: "v1"
-  kind: PersistentVolumeClaim
+  kind: "PersistentVolumeClaim"
   metadata:
     name: ${PERSISTENT_VOLUME_CLAIM_DB}
-    #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   spec:
     accessModes:
-      - ReadWriteOnce
+      - "ReadWriteOnce"
     resources:
       requests:
         storage: ${PERSISTENT_VOLUME_CLAIM_DB_SIZE}
         
 - apiVersion: "v1"
-  kind: PersistentVolumeClaim
+  kind: "PersistentVolumeClaim"
   metadata:
     name: ${PERSISTENT_VOLUME_CLAIM_TMP_WORKER}
-    #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   spec:
     accessModes:
-      - ReadWriteOnce
+      - "ReadWriteOnce"
     resources:
       requests:
         storage: ${PERSISTENT_VOLUME_CLAIM_TMP_WORKER_SIZE}
 
 - apiVersion: "v1"
-  kind: PersistentVolumeClaim
+  kind: "PersistentVolumeClaim"
   metadata:
-    name: fernet-key-pvc
-    #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+    name: "fernet-key-pvc"
   spec:
     accessModes:
-      - ReadWriteMany
+      - "ReadWriteMany"
     resources:
       requests:
         storage: 1Gi
@@ -1027,10 +994,6 @@ parameters:
 - description: Name of the Airflow application
   displayName: Application Name
   name: APPLICATION_NAME
-  required: true
-- description: Version of the implementation
-  displayName: Application Version
-  name: APPLICATION_VERSION
   required: true
 - description: Username for the Airflow web UI authentication
   displayName: Airflow Web UI Username
@@ -1055,7 +1018,7 @@ parameters:
 - description: Celery worker memory size (check with your project limits)
   displayName: Worker Memory
   name: WORKER_MEMORY
-  value: "1Gi"
+  value: "2Gi"
 - description: Python PIP requirements needed for the DAGs, separated by whitespace
   displayName: Python PIP Requirements
   name: PIP_REQUIREMENTS
@@ -1119,7 +1082,7 @@ parameters:
 - description: Size of the pvc volume storing DAGs
   displayName: DAG Volume Storage Size
   name: PERSISTENT_VOLUME_CLAIM_DAG_SIZE
-  value: "4Gi"
+  value: "1Gi"
 - description: Attached PERSISTENT volume claim name for storing the logs
   displayName: PERSISTENT Volume Claim Name (Logs)
   name: PERSISTENT_VOLUME_CLAIM_LOG
@@ -1135,7 +1098,7 @@ parameters:
 - description: Size of the metadata volume storage
   displayName: Metadata Volume Storage Size
   name: PERSISTENT_VOLUME_CLAIM_DB_SIZE
-  value: "4Gi"
+  value: "1Gi"
 - description: Attached PERSISTENT volume claim name for storing temporary data across Celery workers
   displayName: PERSISTENT Volume Claim Name (Temp Storage for Workers)
   name: PERSISTENT_VOLUME_CLAIM_TMP_WORKER
@@ -1143,4 +1106,4 @@ parameters:
 - description: Size of the temporary data storage in Celery workers
   displayName: Metadata Volume Storage Size
   name: PERSISTENT_VOLUME_CLAIM_TMP_WORKER_SIZE
-  value: "4Gi"
+  value: "2Gi"
