@@ -903,7 +903,7 @@ objects:
   status:
     loadBalancer: {}  
     
-- apiVersion: route.openshift.io/v1
+- apiVersion: v1
   kind: Route
   #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   metadata:
