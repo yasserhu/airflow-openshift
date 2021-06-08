@@ -110,7 +110,13 @@ objects:
             protocol: TCP
           - containerPort: 5555
             protocol: TCP
-          resources: {}
+          resources: # try to resolve limits issue
+            limits:
+              cpu: 2500m
+              memory: 2Gi
+            requests:
+              cpu: 1000m
+              memory: 512Mi
           volumeMounts:
           - mountPath: /tmp/fernet_key
             name: fernet-key-vol
@@ -190,9 +196,9 @@ objects:
             periodSeconds: 10
             successThreshold: 1
             timeoutSeconds: 1
-          resources:
-            limits:
-              memory: 1Gi
+          resources:{}
+            #limits:
+             # memory: 1Gi
           securityContext:
             capabilities: {}
             privileged: false
@@ -278,9 +284,9 @@ objects:
             periodSeconds: 10
             successThreshold: 1
             timeoutSeconds: 1
-          resources:
-            limits:
-              memory: 1Gi
+          resources:{}
+            #limits:
+             # memory: 1Gi
           securityContext:
             capabilities: {}
             privileged: false
@@ -397,10 +403,7 @@ objects:
           - containerPort: 8793
             protocol: TCP
           resources:
-           # limits:
-            #  cpu: 250
-             # memory: 1Gi
-            requests:
+             requests:
               cpu: 1
               memory: 1Gi
           volumeMounts:
@@ -462,10 +465,7 @@ objects:
           - containerPort: 8793
             protocol: TCP
           resources:
-            #limits:
-             # cpu: 250
-              #memory: 1Gi
-            requests:
+              requests:
               cpu: 1
               memory: 1Gi
           volumeMounts:
