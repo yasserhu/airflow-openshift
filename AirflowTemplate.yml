@@ -27,18 +27,19 @@ metadata:
     openshift.io/provider-display-name: CSC
     tags: python, data pipelines, orchestration platform
     template.openshift.io/bindable: "false"
-  name: apache-airflow
+  name: bcparks-airflow
   
 objects:
 
 - apiVersion: apps.openshift.io/v1
   kind: DeploymentConfig
-  #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+  namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   metadata:
     labels:
       app: ${APPLICATION_NAME}
+      app.kubernetes.io/part-of: ${APPLICATION_NAME}
     name: flower
-    #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+    namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   spec:
     replicas: 1
     selector:
@@ -112,11 +113,11 @@ objects:
             protocol: TCP
           resources: # try to resolve limits issue
             limits:
-              cpu: 2500m
-              memory: 2Gi
+              cpu: 250m
+              memory: 1Gi
             requests:
-              cpu: 1000m
-              memory: 512Mi
+              cpu: 250m
+              memory: 256Mi
           volumeMounts:
           - mountPath: /tmp/fernet_key
             name: fernet-key-vol
@@ -134,13 +135,14 @@ objects:
     
 - apiVersion: apps.openshift.io/v1
   kind: DeploymentConfig
-  #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+  namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   metadata:
     labels:
       app: ${APPLICATION_NAME}
+      app.kubernetes.io/part-of: ${APPLICATION_NAME}
       template: postgresql-ephemeral-template
     name: postgresql
-    #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+    namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   spec:
     replicas: 1
     selector:
@@ -227,13 +229,14 @@ objects:
     
 - apiVersion: apps.openshift.io/v1
   kind: DeploymentConfig
-  #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+  namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   metadata:
     labels:
       app: ${APPLICATION_NAME}
+      app.kubernetes.io/part-of: ${APPLICATION_NAME}
       template: redis-ephemeral-template
     name: redis
-    #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+    namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   spec:
     replicas: 1
     selector:
@@ -305,7 +308,7 @@ objects:
         - redis
         from:
           kind: ImageStreamTag
-          name: redis:3.2
+          name: redis:6
           namespace: openshift
       type: ImageChange
     - type: ConfigChange
@@ -313,12 +316,13 @@ objects:
     
 - apiVersion: apps.openshift.io/v1
   kind: DeploymentConfig
-  #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+  namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   metadata:
     labels:
       app: ${APPLICATION_NAME}
+      app.kubernetes.io/part-of: ${APPLICATION_NAME}
     name: webserver
-    #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+    namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   spec:
     replicas: 1
     revisionHistoryLimit: 10
@@ -400,8 +404,8 @@ objects:
             protocol: TCP
           resources:
              requests:
-              cpu: 1
-              memory: 1Gi
+              cpu: 50m
+              memory: 256Mi
           volumeMounts:
           - mountPath: "/usr/local/airflow/dags"
             name: airpod-dag-vol
@@ -503,12 +507,13 @@ objects:
     
 - apiVersion: apps.openshift.io/v1
   kind: DeploymentConfig
-  #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+  namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   metadata:
     labels:
       app: ${APPLICATION_NAME}
+      app.kubernetes.io/part-of: ${APPLICATION_NAME}
     name: worker
-    #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+    namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   spec:
     replicas: 2 #${WORKER_COUNT}
     revisionHistoryLimit: 10
@@ -629,12 +634,13 @@ objects:
  
 - apiVersion: apps.openshift.io/v1
   kind: DeploymentConfig
-  #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+  namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   metadata:
     labels:
       app: ${APPLICATION_NAME}
+      app.kubernetes.io/part-of: ${APPLICATION_NAME}
     name: jupyter
-    #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+    namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   spec:
     replicas: 1
     selector:
@@ -674,10 +680,10 @@ objects:
   data:
     requirements.txt: boto3
   kind: ConfigMap
-  #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+  namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   metadata:
     name: requirements
-    #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+    namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
  
 - apiVersion: v1
   stringData:
@@ -685,10 +691,10 @@ objects:
     flower_username: ${FLOWER_USER}
     flower_password: ${FLOWER_PASSWORD}
   kind: Secret
-  #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+  namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   metadata:
     name: flower-auth
-    #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+    namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   type: Opaque
   
 - apiVersion: v1
@@ -697,36 +703,36 @@ objects:
     database-password: ${POSTGRESQL_PASSWORD}
     database-user: ${POSTGRESQL_USER}
   kind: Secret
-  #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+  namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   metadata:
     labels:
       app: ${APPLICATION_NAME}
       template: postgresql-ephemeral-template
     name: postgresql
-    #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+    namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   type: Opaque
   
 - apiVersion: v1
   stringData:
     database-password: ${REDIS_PASSWORD}
   kind: Secret
-  #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+  namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   metadata:
     labels:
       app: ${APPLICATION_NAME}
       template: redis-ephemeral-template
     name: redis
-    #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+    namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   type: Opaque
   
 - apiVersion: v1
   kind: Service
-  #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+  namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   metadata:
     labels:
       app: ${APPLICATION_NAME}
     name: flower
-    #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+    namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   spec:
     ports:
     - name: 5555-tcp
@@ -751,13 +757,14 @@ objects:
     
 - apiVersion: v1
   kind: Service
-  #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+  namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   metadata:
     labels:
       app: ${APPLICATION_NAME}
+      app.kubernetes.io/part-of: ${APPLICATION_NAME}
       template: postgresql-ephemeral-template
     name: postgresql
-    #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+    namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   spec:
     ports:
     - name: postgresql
@@ -773,13 +780,14 @@ objects:
     
 - apiVersion: v1
   kind: Service
-  #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+  namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   metadata:
     labels:
       app: ${APPLICATION_NAME}
+      app.kubernetes.io/part-of: ${APPLICATION_NAME}
       template: redis-ephemeral-template
     name: redis
-    #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+    namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   spec:
     ports:
     - name: redis
@@ -795,12 +803,13 @@ objects:
     
 - apiVersion: v1
   kind: Service
-  #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+  namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   metadata:
     labels:
       app: ${APPLICATION_NAME}
+      app.kubernetes.io/part-of: ${APPLICATION_NAME}
     name: scheduler
-    #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+    namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   spec:
     ports:
     - name: 5555-tcp
@@ -825,12 +834,13 @@ objects:
     
 - apiVersion: v1
   kind: Service
-  #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+  namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   metadata:
     labels:
       app: ${APPLICATION_NAME}
+      app.kubernetes.io/part-of: ${APPLICATION_NAME}
     name: webserver
-    #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+    namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   spec:
     ports:
     - name: 5555-tcp
@@ -855,12 +865,13 @@ objects:
     
 - apiVersion: v1
   kind: Service
-  #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+  namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   metadata:
     labels:
       app: ${APPLICATION_NAME}
+      app.kubernetes.io/part-of: ${APPLICATION_NAME}
     name: worker
-    #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+    namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   spec:
     ports:
     - name: 5555-tcp
@@ -885,12 +896,13 @@ objects:
 
 - apiVersion: v1
   kind: Service
-  #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+  namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   metadata:
     labels:
       app: ${APPLICATION_NAME}
+      app.kubernetes.io/part-of: ${APPLICATION_NAME}
     name: jupyter
-    #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+    namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   spec:
     ports:
     - name: 8080-tcp
@@ -903,14 +915,17 @@ objects:
   status:
     loadBalancer: {}  
     
-- apiVersion: v1
+- apiVersion: route.openshift.io/v1
   kind: Route
-  #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+  namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   metadata:
     labels:
       app: ${APPLICATION_NAME}
+      app.kubernetes.io/part-of: ${APPLICATION_NAME}
+      app.kubernetes.io/component: ${APPLICATION_NAME}
+      app.kubernetes.io/instance: ${APPLICATION_NAME}
     name: ${APPLICATION_NAME}-flower
-    #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+    namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   spec:
     port:
       targetPort: 5555-tcp
@@ -925,12 +940,15 @@ objects:
   
 - apiVersion: route.openshift.io/v1
   kind: Route
-  #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+  namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   metadata:
     labels:
       app: ${APPLICATION_NAME}
+      app.kubernetes.io/part-of: ${APPLICATION_NAME}
+      app.kubernetes.io/component: ${APPLICATION_NAME}
+      app.kubernetes.io/instance: ${APPLICATION_NAME}
     name: ${APPLICATION_NAME}
-    #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+    namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   spec:
     port:
       targetPort: 8080-tcp
@@ -945,12 +963,15 @@ objects:
       
 - apiVersion: route.openshift.io/v1
   kind: Route
-  #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+  namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   metadata:
     labels:
       app: ${APPLICATION_NAME}
+      app.kubernetes.io/part-of: ${APPLICATION_NAME}
+      app.kubernetes.io/component: ${APPLICATION_NAME}
+      app.kubernetes.io/instance: ${APPLICATION_NAME}
     name: ${APPLICATION_NAME}-jupyter
-    #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+    namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   spec:
     port:
       targetPort: 8080-tcp
@@ -967,10 +988,10 @@ objects:
   kind: PersistentVolumeClaim
   metadata:
     name: ${PERSISTENT_VOLUME_CLAIM_DAG}
-    #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+    namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   spec:
     accessModes:
-      - ReadWriteOnce
+      - ReadWriteMany
     resources:
       requests:
         storage: ${PERSISTENT_VOLUME_CLAIM_DAG_SIZE}
@@ -979,10 +1000,10 @@ objects:
   kind: PersistentVolumeClaim
   metadata:
     name: ${PERSISTENT_VOLUME_CLAIM_LOG}
-    #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+    namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   spec:
     accessModes:
-      - ReadWriteOnce
+      - ReadWriteMany
     resources:
       requests:
         storage: ${PERSISTENT_VOLUME_CLAIM_LOG_SIZE}
@@ -991,10 +1012,10 @@ objects:
   kind: PersistentVolumeClaim
   metadata:
     name: ${PERSISTENT_VOLUME_CLAIM_DB}
-    #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+    namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   spec:
     accessModes:
-      - ReadWriteOnce
+      - ReadWriteMany
     resources:
       requests:
         storage: ${PERSISTENT_VOLUME_CLAIM_DB_SIZE}
@@ -1003,10 +1024,10 @@ objects:
   kind: PersistentVolumeClaim
   metadata:
     name: ${PERSISTENT_VOLUME_CLAIM_TMP_WORKER}
-    #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+    namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   spec:
     accessModes:
-      - ReadWriteOnce
+      - ReadWriteMany
     resources:
       requests:
         storage: ${PERSISTENT_VOLUME_CLAIM_TMP_WORKER_SIZE}
@@ -1015,14 +1036,37 @@ objects:
   kind: PersistentVolumeClaim
   metadata:
     name: fernet-key-pvc
-    #namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+    namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
   spec:
     accessModes:
       - ReadWriteMany
     resources:
       requests:
         storage: 1Gi
-        
+- apiVersion: networking.k8s.io/v1
+  kind: NetworkPolicy
+  metadata:
+  name: airflow-allow-internal-traffic
+  namespace: ${APPLICATION_NAME}-${APPLICATION_VERSION}
+  spec:
+    podSelector: {}
+    ingress:
+      - ports:
+          - protocol: TCP
+            port: 8793
+          - protocol: TCP
+            port: 5555
+          - protocol: TCP
+            port: 8080
+          - protocol: TCP
+            port: 80
+          - protocol: TCP
+            port: 5432
+          - protocol: TCP
+            port: 6379
+    policyTypes:
+      - Ingress
+
 parameters:
 - description: Name of the Airflow application
   displayName: Application Name
@@ -1055,7 +1099,7 @@ parameters:
 - description: Celery worker memory size (check with your project limits)
   displayName: Worker Memory
   name: WORKER_MEMORY
-  value: "1Gi"
+  value: "256Mi"
 - description: Python PIP requirements needed for the DAGs, separated by whitespace
   displayName: Python PIP Requirements
   name: PIP_REQUIREMENTS
@@ -1119,7 +1163,7 @@ parameters:
 - description: Size of the pvc volume storing DAGs
   displayName: DAG Volume Storage Size
   name: PERSISTENT_VOLUME_CLAIM_DAG_SIZE
-  value: "4Gi"
+  value: "2Gi"
 - description: Attached PERSISTENT volume claim name for storing the logs
   displayName: PERSISTENT Volume Claim Name (Logs)
   name: PERSISTENT_VOLUME_CLAIM_LOG
@@ -1127,7 +1171,7 @@ parameters:
 - description: Size of the pvc volume storing logs
   displayName: Logs Volume Storage Size
   name: PERSISTENT_VOLUME_CLAIM_LOG_SIZE
-  value: "10Gi"
+  value: "4Gi"
 - description: Attached PERSISTENT volume claim name for storing metadata in PostgreSQL database
   displayName: PERSISTENT Volume Claim Name (DB)
   name: PERSISTENT_VOLUME_CLAIM_DB
@@ -1143,4 +1187,4 @@ parameters:
 - description: Size of the temporary data storage in Celery workers
   displayName: Metadata Volume Storage Size
   name: PERSISTENT_VOLUME_CLAIM_TMP_WORKER_SIZE
-  value: "4Gi"
+  value: "2Gi"
