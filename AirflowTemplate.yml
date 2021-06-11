@@ -346,7 +346,7 @@ objects:
           deploymentconfig: webserver
       spec:
         initContainers:
-          - image: mwargelin/fernet-key-generator
+          - image: docker-registry.rahti.csc.fi/airflow-image/fernet-key-generator:latest
             name: fernet-key-generator
             command: ["python3","create_fernet_key.py"]
             volumeMounts:
