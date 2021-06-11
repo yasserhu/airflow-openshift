@@ -1158,7 +1158,7 @@ parameters:
 - description: Airflow image link
   displayName: Airflow Image Link
   name: AIRFLOW_IMAGE
-  value: apache/airflow # docker-registry.rahti.csc.fi/airflow-image/airflow-os:latest
+  value: docker-registry.rahti.csc.fi/airflow-image/airflow-os:latest
   required: true
 - description: Attached PERSISTENT volume claim name for storing the DAGs
   displayName: PERSISTENT Volume Claim Name (DAGs)
