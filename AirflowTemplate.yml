@@ -171,7 +171,7 @@ objects:
               secretKeyRef:
                 key: database-name
                 name: postgresql
-          image: postgres
+          image: registry.redhat.io/rhel8/postgresql-12@sha256:dff90cd89ee4f92d83c322041431cdb4cf7d24ce27f440ac29c4f4eb4868bb2b
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 3
@@ -259,7 +259,7 @@ objects:
               secretKeyRef:
                 key: database-password
                 name: redis
-          image: redis
+          image: registry.redhat.io/rhel8/redis-5@sha256:ddcb723adf08d52ab10b34cb49afea6ce8b58f2bcd72dac1acf0cd7e3201211a
           imagePullPolicy: IfNotPresent
           livenessProbe:
             failureThreshold: 3
@@ -1158,7 +1158,7 @@ parameters:
 - description: Airflow image link
   displayName: Airflow Image Link
   name: AIRFLOW_IMAGE
-  value: docker-registry.rahti.csc.fi/airflow-image/airflow-os:latest
+  value: docker-registry.rahti.csc.fi/airflow-image/airflow-2-os:latest
   required: true
 - description: Attached PERSISTENT volume claim name for storing the DAGs
   displayName: PERSISTENT Volume Claim Name (DAGs)
