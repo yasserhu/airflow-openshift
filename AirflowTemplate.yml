@@ -639,20 +639,20 @@ objects:
     labels:
       app: ${APPLICATION_NAME}
       app.kubernetes.io/part-of: ${APPLICATION_NAME}
-    name: airflow-Jupyter
+    name: airflow-jupyter
     namespace: ${APPLICATION_NAMESPACE}
   spec:
     replicas: 1
     selector:
       app: ${APPLICATION_NAME}
-      deploymentconfig: airflow-Jupyter
+      deploymentconfig: airflow-jupyter
     strategy:
       type: Rolling
     template:
       metadata:
         labels:
           app: ${APPLICATION_NAME}
-          deploymentconfig: airflow-Jupyter
+          deploymentconfig: airflow-jupyter
       spec:
         containers:
           - env:
@@ -901,7 +901,7 @@ objects:
     labels:
       app: ${APPLICATION_NAME}
       app.kubernetes.io/part-of: ${APPLICATION_NAME}
-    name: airflow-Jupyter
+    name: airflow-jupyter
     namespace: ${APPLICATION_NAMESPACE}
   spec:
     ports:
@@ -911,7 +911,7 @@ objects:
       targetPort: 8080
     selector:
       app: ${APPLICATION_NAME}
-      deploymentconfig: airflow-Jupyter
+      deploymentconfig: airflow-jupyter
   status:
     loadBalancer: {}  
     
@@ -970,7 +970,7 @@ objects:
       app.kubernetes.io/part-of: ${APPLICATION_NAME}
       app.kubernetes.io/component: ${APPLICATION_NAME}
       app.kubernetes.io/instance: ${APPLICATION_NAME}
-    name: airflow-Jupyter
+    name: airflow-jupyter
     namespace: ${APPLICATION_NAMESPACE}
   spec:
     port:
@@ -980,7 +980,7 @@ objects:
       termination: edge
     to:
       kind: Service
-      name: airflow-Jupyter
+      name: airflow-jupyter
       weight: 100
     wildcardPolicy: None
       
