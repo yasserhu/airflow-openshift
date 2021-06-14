@@ -308,7 +308,7 @@ objects:
         - airflow-redis
         from:
           kind: ImageStreamTag
-          name: airflow-redis
+          name: redis:5
           namespace: openshift
       type: ImageChange
     - type: ConfigChange
